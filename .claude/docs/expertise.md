@@ -1,6 +1,6 @@
 # Forger — Expertise
 
-Reference explanations for the underlying Postgres and replication mechanisms Forger's architecture depends on. Vision and domain live in `overview.md`; the build roadmap lives in `approach.md`; architecture and stack live in `structure.md`. This file explains *how a mechanism works*, not *whether/when Forger uses it* — that's the other files' job.
+Reference explanations for the underlying Postgres and replication mechanisms Forger's architecture depends on. This file explains *how a mechanism works*, not *whether/when or where it's actually used*.
 
 ---
 
@@ -41,3 +41,11 @@ A materialized view stores the result of a query physically, rather than recompu
 ## Reading `EXPLAIN ANALYZE`
 
 `EXPLAIN ANALYZE` runs a query and reports the actual plan Postgres chose — which indexes (if any) it used, the join strategy, estimated vs. actual row counts, and time spent per node of the plan. Comparing its output before and after adding an index or partitioning a table is how a performance claim gets verified instead of assumed.
+
+## UUIDv7 vs. a database-generated key
+
+A UUIDv7 encodes a millisecond timestamp in its high-order bits, followed by random bits for the remainder — unlike UUIDv4, which is fully random. Two consequences follow: values generated close together in time sort close together, so a UUIDv7 primary key keeps btree index inserts roughly sequential (append-like) instead of scattering writes randomly across the index the way UUIDv4 does; and because generation only needs a clock and a random source, it can happen entirely in application code with no round-trip to the database and no reliance on a Postgres extension, unlike `gen_random_uuid()` or a `SERIAL`/`IDENTITY` column.
+
+## Composite foreign keys for cross-table tenant consistency
+
+A single-column foreign key can only guarantee that a referenced row exists — it can't see a second column on the row it points to. Pairing a tenant-scoped foreign key with a redundant `tenant_id` copied onto the referencing table, and declaring the foreign key as a *composite* one (`(child_ref_id, tenant_id) REFERENCES parent (id, tenant_id)`, which requires a unique constraint on that same pair in the parent), forces the same `tenant_id` value to satisfy two references at once. A row pairing a child from one tenant with a parent from another fails the constraint outright — the isolation guarantee moves from "the application remembered to check" to "the database physically cannot store it," without needing a trigger.

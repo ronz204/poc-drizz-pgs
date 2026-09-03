@@ -1,6 +1,6 @@
 # Forger — Overview
 
-Vision and domain scope for Forger. Architecture and stack live in `structure.md`; the build roadmap lives in `approach.md`; the underlying Postgres/replication mechanisms live in `expertise.md`.
+Vision and domain scope for Forger.
 
 ---
 
@@ -24,7 +24,7 @@ Subscriber and notification delivery are explicitly deferred. They open the door
 
 ## Multi-tenancy isolation
 
-Two isolation approaches are meant to be implemented and compared rather than one chosen up front: row-level security enforced by Postgres itself, versus explicit `tenant_id` filtering enforced by application-code discipline. See `expertise.md` for how each mechanism actually works — the comparison itself (real security guarantee vs. performance vs. maintenance complexity vs. behavior under replication) is this project's central learning subject, not an implementation detail to settle quickly.
+Two isolation approaches are meant to be implemented and compared rather than one chosen up front: row-level security enforced by Postgres itself, versus explicit `tenant_id` filtering enforced by application-code discipline. The comparison itself (real security guarantee vs. performance vs. maintenance complexity vs. behavior under replication) is this project's central learning subject, not an implementation detail to settle quickly.
 
 ---
 

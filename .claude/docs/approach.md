@@ -1,6 +1,6 @@
 # Forger — Build Approach
 
-The build plan for Forger: what gets built, in what order, and what "done" means. Domain vision lives in `overview.md`; architecture and stack live in `structure.md`; underlying mechanisms live in `expertise.md`.
+The build plan for Forger: what gets built, in what order, and what "done" means.
 
 ---
 
@@ -33,7 +33,7 @@ Work proceeds in phases, each intended to build the system up from a bare stack 
 1. **Domain & basic writes** — model Tenant, Service, Incident, IncidentUpdate with Hexagonal architecture; one write endpoint (create Incident), all against primary; a single hardcoded tenant, no multi-tenancy yet.
 2. **Real multi-tenancy** — implement isolation (RLS and/or explicit `tenant_id` filtering — compare both); basic authentication resolving the current tenant from the session/token; verify the Service↔Incident↔Tenant isolation invariant both in the domain and as a database constraint.
 3. **Read replica routing** — implement the read repository against the replica; expose the public status page through it; observe replication lag firsthand by writing an Incident and reading it immediately from the status page.
-4. **Resolving the lag** — choose and justify one of the mitigation strategies from `expertise.md`, documenting the trade-off in `structure.md`.
+4. **Resolving the lag** — choose and justify one of the candidate mitigation strategies, documenting the trade-off.
 5. **Partitioning & analytics** — partition IncidentUpdate by date range if simulated volume justifies it; add metrics (e.g. uptime % per service, per month) via materialized views; practice `EXPLAIN ANALYZE` comparing before/after partitioning and indexing.
 
 ## Done criteria

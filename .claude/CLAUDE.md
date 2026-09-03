@@ -2,7 +2,7 @@
 
 A container repo for sequential, learning-focused proof-of-concept projects. Each POC lives under `services/` and is worked on until its learning goals are exhausted, then purged and replaced by the next one — this has already happened once (a prior feature-flags POC was fully removed before the current POC started). Treat whatever is currently under `services/` as the *active* POC, not a permanent product.
 
-**Current active POC: Forger** — a Postgres-focused exercise (advanced Postgres, multi-tenancy isolation, high availability via read replicas) using an incident-management/status-page domain as the vehicle. See `.claude/docs/overview.md` for its vision and domain model, `.claude/docs/structure.md` for its architecture and stack, `.claude/docs/approach.md` for its build roadmap, and `.claude/docs/expertise.md` for the underlying Postgres/replication mechanisms it depends on. `ROADMAP.md` at the repo root is the user's personal progress checklist for that same roadmap — not part of the knowledge base, not English-mandated, and safe to check off freely.
+**Current active POC: Forger** — a Postgres-focused exercise (advanced Postgres, multi-tenancy isolation, high availability via read replicas) using an incident-management/status-page domain as the vehicle. See `.claude/docs/overview.md` for its vision and domain model, `.claude/docs/structure.md` for its architecture and stack, `.claude/docs/approach.md` for its build roadmap, `.claude/docs/database.md` for its schema/roles/policies, and `.claude/docs/expertise.md` for the underlying Postgres/replication mechanisms it depends on. `ROADMAP.md` at the repo root is the user's personal progress checklist for that same roadmap — not part of the knowledge base, not English-mandated, and safe to check off freely.
 
 ---
 
@@ -10,7 +10,7 @@ A container repo for sequential, learning-focused proof-of-concept projects. Eac
 
 | Path | Holds |
 |---|---|
-| `.claude/docs/` | Reference files for the active POC — `overview.md` (vision, domain model), `structure.md` (architecture, stack, planned infrastructure topology), `approach.md` (build roadmap), `expertise.md` (underlying Postgres/replication mechanisms) |
+| `.claude/docs/` | Reference files for the active POC — `overview.md` (vision, domain model), `structure.md` (architecture, stack, planned infrastructure topology), `approach.md` (build roadmap), `database.md` (schema, roles, RLS policies), `expertise.md` (underlying Postgres/replication mechanisms) |
 | `.claude/rules/` | Conventions auto-loaded when a matching file is opened/edited — currently only the rule governing how this knowledge base itself is edited |
 | `.claude/skills/` | The delta methodology's own skill set: `archivist` (writes knowledge-base artifacts), `specifier` (gathers spec/design intent before a slice is written), `sentinel` (checks a slice against its implementation), `surveyor` (bootstraps a new project's knowledge base — used to create this file) |
 | `.claude/settings.json` | Permission policy — see Permissions below |

@@ -1,6 +1,6 @@
 # Forger — Structure
 
-Architecture, stack, and planned infrastructure topology for Forger. Vision and domain live in `overview.md`; the build roadmap lives in `approach.md`; underlying mechanisms live in `expertise.md`. Nothing described below is implemented yet — this records design intent for the active POC, not as-built fact.
+Architecture, stack, and planned infrastructure topology for Forger. Nothing described below is implemented yet — this records design intent for the active POC, not as-built fact.
 
 ---
 
@@ -51,4 +51,4 @@ Both nodes run as Docker Compose services alongside the application container. S
 
 ## Open architecture decision — replication lag
 
-Once read-replica routing exists, reads can observe stale data relative to a just-completed write. Which mitigation strategy to adopt — read-your-writes sticky routing, accepted eventual consistency with a staleness indicator, or timestamp-based staleness detection — is not chosen yet; see `expertise.md` for how each candidate actually works. The choice, and its trade-offs, get documented here once made.
+Once read-replica routing exists, reads can observe stale data relative to a just-completed write. Which mitigation strategy to adopt — read-your-writes sticky routing, accepted eventual consistency with a staleness indicator, or timestamp-based staleness detection — is not chosen yet. The choice, and its trade-offs, get documented here once made.
