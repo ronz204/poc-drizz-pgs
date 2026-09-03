@@ -1,0 +1,17 @@
+name: forger
+
+include:
+  - path: docker/postgresql/compose.yml
+
+volumes:
+  forger-postgres-data:
+    driver: local
+    name: forger-postgres
+  forger-redis-data:
+    driver: local
+    name: forger-redis
+
+networks:
+  forger-network:
+    driver: bridge
+    name: forger-network
