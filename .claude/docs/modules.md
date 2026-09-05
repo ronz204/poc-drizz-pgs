@@ -1,33 +1,43 @@
-<!--
-This file ships as part of the harness itself, as the fill-in skeleton for
-this doc category — copy it into a project as-is, then fill it in place
-when bootstrapping (surveyor) or updating (archivist) that project's
-per-component functional reference. Delete these guidance comments once
-every section holds real, grounded content. Ground every claim in the real
-source implementing each component (Step 0) — never infer behavior from a
-filename or from what a similar project usually does.
--->
-
 # Modules
 
-<!-- One sentence: what this file covers and what it deliberately excludes (e.g. "Why these components exist lives in overview.md, not here"). -->
+Per-component functional reference for Forger's planned architecture. Why these components exist and are split this way lives in `overview.md` and `structure.md`, not here. None of the components below are implemented yet — this describes the target design agreed on before any code was written, not observed behavior; update each entry to describe real behavior once it exists.
 
 ---
 
-## `<Component name>`
+## Write repository (planned)
 
-<!-- Repeat this subsection per component. Component names are durable architecture vocabulary — describe the boundary, not the source-tree location that implements it. -->
+**Purpose.** Implements the write side of the Incident persistence port. Owns every mutation to Tenant, Service, Incident, and IncidentUpdate data.
 
-**Purpose.** <!-- What this component is responsible for, in one or two sentences. -->
+**Flow.** Always connects to the Postgres primary node — never the replica, regardless of caller. This is the only path by which incident data changes.
 
-**Flow.** <!-- The actual step-by-step behavior — a numbered list or a short sequence, whichever reads clearer. Describe what really happens, not an idealized version. -->
+**Data shape.** Not yet defined — depends on the domain model's concrete field shapes, which haven't been implemented.
 
-**Data shape.** <!-- The concrete shape this component reads/writes/exposes. Use a fenced code block for anything structural — never describe a schema or payload in prose when a code block says it exactly. -->
+## Read repository (planned)
 
-## `<Next component name>`
+**Purpose.** Implements a separate, read-oriented persistence port geared toward status-page queries (current status, incident timelines) rather than mutation.
+
+**Flow.** Always connects to the Postgres replica node — never the primary. Because it reads from a streaming-replication replica, results can lag behind the most recent write; resolving that lag is a dedicated later concern (see `structure.md`'s open architecture decisions).
+
+**Data shape.** Not yet defined.
+
+## Internal panel API (planned)
+
+**Purpose.** The authenticated, per-tenant surface for creating and updating incidents and managing services.
+
+**Flow.** Every operation goes through the write repository against the primary — this surface never reads from the replica, since the person using it needs to see the effect of their own writes immediately.
+
+**Data shape.** Not yet defined.
+
+## Public status page API (planned)
+
+**Purpose.** The unauthenticated, tenant-scoped surface the public sees — current status plus incident timeline.
+
+**Flow.** Every operation goes through the read repository against the replica. Expected to be the higher-volume of the two API surfaces, which is the reason it's the one deliberately routed off the primary.
+
+**Data shape.** Not yet defined.
 
 ---
 
 ## Non-goals
 
-<!-- Only include this section if a scope boundary here is easy to violate by accident. Omit entirely otherwise. -->
+- No queueing, notification-delivery, or background-worker components are planned as part of this initial component set — `Subscriber` notifications are a stretch-scope concept (see `approach.md`) and would only introduce such a component if actually pursued.

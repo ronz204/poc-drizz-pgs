@@ -1,53 +1,43 @@
-<!--
-This file ships as part of the harness itself, as the fill-in skeleton for
-this doc category — copy it into a project as-is, then fill it in place
-when bootstrapping (surveyor) or updating (archivist) that project's build
-approach. Unlike structure.md, this file is always created for a
-bootstrapped project, even when the honest content is "not applicable here"
-(no meaningful build sequencing beyond "just build the thing") — state that
-explicitly rather than omitting the file. Unlike a slice's plan.md, this
-file is never discarded once work lands — it stays live-edited the same way
-every other doc does: update the roadmap and status in place as phases
-complete, don't leave a finished phase's entry describing it as pending.
-Delete these guidance comments once every section holds real, grounded
-content. Ground every claim in what was actually decided/confirmed, never
-invent a phase or pillar that hasn't actually been agreed on.
--->
-
 # Approach
 
-<!-- One sentence: what this file covers — the order and philosophy behind building this project — and what it deliberately excludes (e.g. "Why the project exists lives in overview.md, not here"). -->
+The order and philosophy behind building Forger — why this project exists lives in `overview.md`, not here.
 
 ---
 
 ## Technical pillars
 
-<!-- Table: the few things this project deliberately builds together because the problem genuinely needs them at once, not because they were bolted on separately. Explain *why together*, not just list them. Omit if the project has no such deliberate combination — most don't. -->
-
 | Pillar | What it means here |
 |---|---|
-| `<pillar>` | `<why this matters and why it's tied to the others>` |
+| Advanced Postgres + multi-tenancy + read-replica HA, practiced together | All three are built against the same incident-management domain deliberately, rather than as isolated exercises — isolation decisions and replication trade-offs only feel real when they're applied to the same aggregate under the same load, instead of three disconnected toy examples. |
+| Hexagonal design with two coexisting persistence adapters | The domain stays a single model; only the persistence layer forks into a write path (primary) and a read path (replica), which is itself part of what's being practiced. |
 
 ## Functional scope
 
-<!-- What the system being built must actually support, as a bullet list of concrete capabilities — not a feature-marketing list, a scope boundary a build sequence can be checked against. -->
+- Create and manage Tenants, Services, and Incidents, including the Incident's forward-only status transition.
+- Record an append-only IncidentUpdate timeline per Incident.
+- An authenticated, per-tenant internal panel for managing the above.
+- An unauthenticated, tenant-scoped public status page for viewing current status and incident history.
 
 ## Roadmap
 
-<!-- Ordered phases/stages the build proceeds through, each with what it actually establishes. Update this in place as phases complete — mark a phase done when it's done, don't leave it worded as future work after it lands. -->
+All phases below are pending — none has started yet.
 
-0. **`<phase name>`** — `<what this phase establishes and why it comes first/next>`
-
-## Done criteria
-
-<!-- How to tell the current scope (or a named phase of it) is actually done — specific, falsifiable conditions, not a vibe. If it can't be checked by reading the resulting code/behavior, it isn't specific enough yet. -->
+0. **Stack and infrastructure validation** — stand up Postgres primary + replica in Docker Compose with streaming replication, confirm Bun can connect to both nodes, and validate the ORM's Bun compatibility. Done when: both nodes are up under Compose, Bun connects to each, an insert on the primary is observed on the replica, and the replication lag has been measured at least once.
+1. **Domain and basic writes** — model Tenant, Service, Incident, and IncidentUpdate through a hexagonal design; expose one write endpoint (create an incident) against the primary. No multi-tenancy yet — a single hardcoded tenant. Done when: that endpoint works end to end against the primary with the domain invariants enforced.
+2. **Real multi-tenancy** — implement and compare Row-Level Security and explicit `tenant_id` filtering; add basic authentication that resolves the current tenant from the session/token; verify the Service/Incident/Tenant isolation invariant holds both in the domain and as a database constraint. Done when: both isolation approaches are implemented (at least one on a separate branch) and compared.
+3. **Read-replica routing** — implement the read repository against the replica and expose the public status page through it. Done when: writing an incident and immediately reading it from the status page makes the replication lag directly observable.
+4. **Resolving the lag** — choose and document one of the candidate strategies from `expertise.md`. Done when: a strategy is implemented and its trade-offs are documented against the alternatives.
+5. **Partitioning and analytics** — partition IncidentUpdate by date range if simulated volume justifies it; add uptime-percentage metrics via materialized views; compare query plans before/after partitioning and indexing. Done when: a partitioned table and at least one materialized-view-backed metric exist, with `EXPLAIN ANALYZE` comparisons recorded.
+6. **Manual failover (stretch)** — deliberately kill the primary, promote the replica, observe what breaks given the hardcoded primary connection, and document what a real automatic failover would require. Done when: the failure mode is observed and documented; automatic failover itself stays out of scope.
 
 ## Stretch goals
 
-<!-- Explicitly non-blocking extensions — real candidates, not blocking scope, deferred once the done criteria above are actually met. Omit if there are none. -->
+- Subscriber entity plus notification delivery.
+- PgBouncer in front of both nodes, evaluating its interaction with RLS and connection pooling.
+- Fair-usage metrics: how much load each tenant generates against the primary versus the replicas.
 
 ---
 
 ## Non-goals
 
-<!-- Only include this section if a scope boundary here is easy to violate by accident. Omit entirely otherwise. -->
+- This roadmap sequences the learning goals, not a production launch — there is no phase for deployment, monitoring, or operational hardening beyond what a phase's own validation requires.

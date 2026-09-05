@@ -1,50 +1,39 @@
-<!--
-This file ships as part of the harness itself, as the fill-in skeleton for
-this doc category — copy it into a project as-is, then fill it in place
-when bootstrapping (surveyor) or updating (archivist) that project's
-mechanism reference. Unlike structure.md, this file is always created
-for a bootstrapped project, even when the honest content is "not applicable
-here" (nothing here relies on a mechanism worth explaining) — state that
-explicitly rather than omitting the file. Delete these guidance comments
-once every section holds real, grounded content. Ground every claim in the
-real technology/algorithm/protocol actually in play (Step 0) or in
-established domain fact — never invent a mechanism explanation that hasn't
-actually been confirmed.
--->
-
 # Expertise
 
-<!-- One sentence: this file explains *how* a non-trivial mechanism or concept the project depends on actually works — not *whether*, *when*, or *where* it's used; that's structure.md's or database.md's job. If genuinely not applicable, say so plainly here and skip the remaining sections. -->
+How the non-trivial mechanisms Forger depends on actually work — not whether or where they're used, which is `structure.md`'s and `database.md`'s job.
 
 ---
 
 ## Glossary
 
-<!-- Optional. Only for terse, domain- or technology-specific terms that need a one-line definition before the sections below make sense — not a substitute for the sections themselves. Table: term -> what it means here. Omit entirely if nothing needs this. -->
-
 | Term | Meaning |
 |---|---|
-| `<term>` | `<what it means here>` |
+| RLS | Row-Level Security — a Postgres feature that transparently filters or rejects rows per query based on a policy tied to session state. |
+| Streaming replication | Postgres's mechanism for continuously shipping write-ahead log records from a primary to one or more replicas, keeping them near-real-time copies. |
+| CQRS-lite | This project's term for its own write/read split: separate persistence adapters targeting different physical Postgres nodes, without separate read/write data models or projections. |
 
-## `<Mechanism or concept name>`
+## Postgres streaming replication
 
-<!--
-Repeat this section per mechanism/concept that this project's design leans
-on and that a reader can't be assumed to already know cold — a database
-feature, a protocol behavior, a non-obvious algorithm/data-structure
-property, a domain rule with real consequences if misunderstood. Explain
-the underlying behavior in enough depth that a reader could reason about it
-correctly without re-deriving it from source: what it actually does, what
-guarantee it does/doesn't provide, and the caveat that trips people up.
-Prose is usually right here; use a table only when comparing genuine
-variants of the same mechanism (e.g. competing strategies for the same
-problem).
--->
+A replica continuously applies the primary's write-ahead log to stay in sync. Replication is asynchronous by default: a write is considered committed on the primary before the replica has necessarily applied it, which means there is always some non-zero replication lag between "written" and "visible on the replica." That lag is not a bug to eliminate — it's a real property of the system that has to be measured and either compensated for or explicitly surfaced (see `structure.md`'s open architecture decisions for the candidate strategies).
 
-## `<Next mechanism or concept name>`
+## Row-Level Security and connection pooling
+
+RLS policies key off session-local state — typically set via `SET app.current_tenant = '<value>'` — evaluated per query against the current session. The critical constraint: that `SET` must be executed on the exact same database session/connection as the query it's meant to scope. If a connection pool hands the query to a different physical connection than the one the `SET` ran on, the tenant context is silently wrong or absent, and RLS either leaks another tenant's rows or blocks all of them — a failure mode that fails quietly rather than loudly. This is why any RLS-scoped query must run inside the same transaction as its `SET` statement, never relying on the connection pool to preserve session state across separate calls.
+
+An open question not yet confirmed: how (or whether) RLS policy configuration itself propagates from primary to replica under streaming replication, versus needing to be set up independently on each node. This has to be validated once replica routing exists, since it directly affects whether the isolation guarantee holds on the read path.
+
+## Replica-lag mitigation strategies
+
+Three approaches are candidates for resolving the read-your-writes problem once it's observed in practice:
+
+- **Read-your-writes / sticky primary**: route a tenant's reads to the primary for a short window after their own recent write, then fall back to the replica. Strong consistency for the writer, at the cost of extra load on the primary and added routing complexity.
+- **Accepted eventual consistency with a staleness indicator**: always read from the replica, and surface how stale the data might be (e.g. "updated N seconds ago") rather than hiding the lag. Simple, but pushes the consistency problem into the UI.
+- **Timestamp-based versioning**: attach a write timestamp to records and compare it against a known replication watermark to detect staleness explicitly, rather than assuming a fixed window. More precise than a sticky-primary window, at the cost of extra bookkeeping.
+
+No trade-off has been chosen yet — this is deliberately deferred until the lag can be observed directly.
 
 ---
 
 ## Non-goals
 
-<!-- Only include this section if a scope boundary here is easy to violate by accident. Omit entirely otherwise. -->
+- This file explains mechanisms Forger's own design depends on; it does not attempt a general Postgres or Elysia/Drizzle tutorial beyond what those mechanisms require.
