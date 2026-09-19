@@ -6,6 +6,7 @@
     "lint": "biome check .",
     "format": "biome format --write .",
     "lint:fix": "biome check --write .",
+    "drizz:migrate": "bunx --bun drizzle-kit migrate",
     "dev:script": "bun --watch run cmd/script.boot.ts"
   },
   "devDependencies": {
