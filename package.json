@@ -14,5 +14,11 @@
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "dependencies": {
+    "dockdi": "^1.0.2",
+    "postgres": "^3.4.9",
+    "uuidv7": "^1.2.1",
+    "zod": "^4.6.5"
   }
 }
