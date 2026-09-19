@@ -9,6 +9,7 @@
     "dev:service": "bun --watch run cmd/service.boot.ts"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.5.14",
     "@types/bun": "latest"
   },
   "peerDependencies": {
