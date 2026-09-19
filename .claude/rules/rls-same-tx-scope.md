@@ -1,11 +1,11 @@
 ---
 paths:
-  - "services/forger-engine/**"
+  - "source/**"
 ---
 
 # RLS Transaction Scope Conventions
 
-Row-Level Security in Postgres is keyed off session-local state, but a connection pool can hand two calls to different physical connections without warning. This rule applies to any query written for Forger that depends on an active RLS policy, regardless of which internal directory layout it eventually lands in (not yet decided).
+Row-Level Security in Postgres is keyed off session-local state, but a connection pool can hand two calls to different physical connections without warning. This rule applies to any query written for Forger that depends on an active RLS policy, regardless of which internal directory layout it eventually lands in under `source/` (not yet decided).
 
 ---
 

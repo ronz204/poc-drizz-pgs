@@ -1,11 +1,11 @@
 ---
 paths:
-  - "services/forger-engine/**"
+  - "source/**"
 ---
 
 # Persistence Adapter Split Conventions
 
-Forger's central learning goal is understanding primary/replica Postgres routing end to end, without a third-party read-routing library doing it invisibly. This rule protects that goal at the code level: it applies to any persistence-layer code written for Forger, regardless of which internal directory layout it eventually lands in (not yet decided).
+Forger's central learning goal is understanding primary/replica Postgres routing end to end, without a third-party read-routing library doing it invisibly. This rule protects that goal at the code level: it applies to any persistence-layer code written for Forger, regardless of which internal directory layout it eventually lands in under `source/` (not yet decided).
 
 ---
 

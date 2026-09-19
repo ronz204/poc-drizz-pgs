@@ -12,13 +12,14 @@ A deliberate learning project on advanced Postgres, multi-tenancy, and read-repl
 | `.claude/rules/` | Conventions auto-loaded when a matching file is opened/edited, scoped via `paths:` frontmatter |
 | `.claude/skills/` | The delta methodology's own capabilities (`archivist`, `specifier`, `sentinel`, `surveyor`) |
 | `.claude/settings.json` | Permission policy — see Permissions below |
-| `services/forger-engine/deltas/` | Per-slice spec/design/plan files: `<slice>.spec.md`, optional `<slice>.design.md`, optional `<slice>.plan.md` — none exist yet |
+| `deltas/` | Per-slice spec/design/plan files: `<slice>.spec.md`, optional `<slice>.design.md`, optional `<slice>.plan.md` — none exist yet |
 
 ## Repo layout
 
 | Path | Purpose |
 |---|---|
-| `services/forger-engine/` | The Forger application itself (Hexagonal + DDD). No internal structure decided yet beyond this top-level directory — it doesn't exist on disk yet, since no code has been written. |
+| `source/` | The Forger application itself (Hexagonal + DDD), including the persistence layer. No internal structure decided yet beyond this top-level directory — empty, since no code has been written. |
+| `cmd/`, `docker/` | Scaffolded at the top level; purpose not yet decided — both are empty, since no code has been written. |
 
 ## Setup & common commands
 
