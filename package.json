@@ -1,0 +1,17 @@
+{
+  "name": "poc-drizz-pgs",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "lint:fix": "biome check --write .",
+    "dev:service": "bun --watch run cmd/service.boot.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
