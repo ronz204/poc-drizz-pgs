@@ -6,8 +6,8 @@ implementation roadmap for realizing a slice's spec and/or design (or a
 bounded piece of work that doesn't need a full slice yet). Unlike spec.md/
 design.md, a plan is NOT living truth forever: once every step is done and
 the outcome is reflected in the code and in those living-contract files, the
-plan has served its purpose — it can be left frozen or deleted, it does not
-need to be kept in sync after the fact.
+plan has served its purpose and gets DELETED — it is not kept around frozen,
+and it does not need to be kept in sync after the fact.
 Fill every section; delete guidance comments before presenting the draft.
 Ground every step in the actual codebase and in the slice's current
 spec.md/design.md — never write this from a general implementation guess.
@@ -19,7 +19,7 @@ spec.md/design.md — never write this from a general implementation guess.
 
 ## Status
 
-<!-- not started / in progress / done — update this in place as steps complete; don't append a log entry per update, there's no history layer backing this file. -->
+<!-- not started / in progress / done — update this in place as steps complete; don't append a log entry per update, there's no history layer backing this file. Once this reads "done" and the outcome is reflected in the code and in spec.md/design.md, delete this file rather than leaving it at "done". -->
 
 ## Goal
 

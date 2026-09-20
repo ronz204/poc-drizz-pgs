@@ -12,18 +12,23 @@ A deliberate learning project on advanced Postgres, multi-tenancy, and read-repl
 | `.claude/rules/` | Conventions auto-loaded when a matching file is opened/edited, scoped via `paths:` frontmatter |
 | `.claude/skills/` | The delta methodology's own capabilities (`archivist`, `specifier`, `sentinel`, `surveyor`) |
 | `.claude/settings.json` | Permission policy — see Permissions below |
-| `deltas/` | Per-slice spec/design/plan files: `<slice>.spec.md`, optional `<slice>.design.md`, optional `<slice>.plan.md` — none exist yet |
+| `deltas/` | Per-slice spec/design/plan files: `<slice>.spec.md`, optional `<slice>.design.md`, optional `<slice>.plan.md` |
 
 ## Repo layout
 
 | Path | Purpose |
 |---|---|
-| `source/` | The Forger application itself (Hexagonal + DDD), including the persistence layer. No internal structure decided yet beyond this top-level directory — empty, since no code has been written. |
-| `cmd/`, `docker/` | Scaffolded at the top level; purpose not yet decided — both are empty, since no code has been written. |
+| `source/` | The Forger application itself (Hexagonal + DDD), including the persistence layer. No internal structure decided yet beyond this top-level directory — empty, since no application code has been written. |
+| `drizzle/` | The Drizzle ORM schema layer: table/enum definitions, the tenant-isolation policy, DB-level triggers (hand-authored SQL, kept separately since the ORM can't generate them), and generated migrations. |
+| `cmd/` | Scaffolded entrypoint for future scripts; purpose not yet decided — still empty. |
+| `docker/` | Local Postgres infrastructure via Docker Compose: a primary node with bootstrap automation for roles and the schema. No replica yet. |
 
 ## Setup & common commands
 
-Not yet established. No package manifest, task runner, or Docker Compose file exists yet — the project's first build phase (standing up Postgres primary + replica and confirming Bun connectivity) hasn't started.
+- `bun install` — install dependencies.
+- `bun run lint` / `bun run format` — Biome check / format.
+- `bunx drizzle-kit generate` — regenerate migrations from the schema definition in `drizzle/`.
+- Local Postgres comes up via the root Docker Compose file, which includes `docker/`'s. It defines a primary only; bringing it up and confirming Bun connects to it hasn't happened yet — see `deltas/core-schema.plan.md`.
 
 ## Permissions
 
@@ -31,7 +36,7 @@ The full policy lives in `.claude/settings.json`. By default it denies reading `
 
 ## Conventions
 
-See `.claude/rules/` for the two conventions currently enforced: splitting persistence into separate write (primary) and read (replica) adapters, and always pairing a Row-Level-Security `SET` with its query inside the same transaction.
+See `.claude/rules/` for the conventions currently enforced: persistence write/read adapter splitting, pairing a Row-Level-Security `SET` with its query inside the same transaction, Drizzle schema/trigger file conventions, and how this knowledge base itself gets edited.
 
 ---
 
