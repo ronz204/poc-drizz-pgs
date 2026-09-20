@@ -1,6 +1,5 @@
 import { InvalidIdentifierError } from "@core/common-domain";
-import { Service } from "@core/multitenant-org/contexts/service/service.aggregate";
-import { DuplicateServiceNameError } from "@core/multitenant-org/contexts/service/service.errors";
+import { DuplicateServiceNameError, Service } from "@core/multitenant-org";
 import {
 	INVALID_UUID,
 	validUuid,

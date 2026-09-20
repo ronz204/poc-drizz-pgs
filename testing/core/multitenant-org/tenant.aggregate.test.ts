@@ -1,9 +1,9 @@
-import { Tenant } from "@core/multitenant-org/contexts/tenant/tenant.aggregate";
 import {
 	PlanDowngradeConflictError,
 	ServiceCapExceededError,
-} from "@core/multitenant-org/contexts/tenant/tenant.errors";
-import { TenantId } from "@core/multitenant-org/contexts/tenant/tenant.vos";
+	Tenant,
+	TenantId,
+} from "@core/multitenant-org";
 import { buildTenant } from "@tests/utils/fixtures/tenant.fixture";
 import { describe, expect, it } from "vitest";
 

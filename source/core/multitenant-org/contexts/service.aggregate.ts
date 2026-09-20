@@ -1,8 +1,8 @@
-import type { Tenant } from "../tenant/tenant.aggregate";
-import { TenantId } from "../tenant/tenant.vos";
 import { DuplicateServiceNameError } from "./service.errors";
 import type { ServiceSnapshot } from "./service.types";
 import { ServiceId } from "./service.vos";
+import type { Tenant } from "./tenant.aggregate";
+import { TenantId } from "./tenant.vos";
 
 export class Service {
 	private constructor(
