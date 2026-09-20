@@ -1,27 +1,30 @@
 {
-  "name": "poc-drizz-pgs",
-  "type": "module",
-  "private": true,
-  "scripts": {
-    "lint": "biome check .",
-    "format": "biome format --write .",
-    "lint:fix": "biome check --write .",
-    "drizz:migrate": "bunx --bun drizzle-kit migrate",
-    "dev:script": "bun --watch run cmd/script.boot.ts"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "2.5.14",
-    "@types/bun": "latest",
-    "drizzle-kit": "^1.0.0-rc.4"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "dependencies": {
-    "dockdi": "^1.0.2",
-    "drizzle-orm": "^1.0.0-rc.4",
-    "postgres": "^3.4.9",
-    "uuidv7": "^1.2.1",
-    "zod": "^4.6.5"
-  }
+	"name": "poc-drizz-pgs",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"lint": "biome check .",
+		"format": "biome format --write .",
+		"lint:fix": "biome check --write .",
+		"drizz:migrate": "bunx --bun drizzle-kit migrate",
+		"dev:script": "bun --watch run cmd/script.boot.ts",
+		"test": "vitest run",
+		"test:watch": "vitest"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.14",
+		"@types/bun": "latest",
+		"drizzle-kit": "^1.0.0-rc.4",
+		"vitest": "^5.0.1"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"dockdi": "^1.0.2",
+		"drizzle-orm": "^1.0.0-rc.4",
+		"postgres": "^3.4.9",
+		"uuidv7": "^1.2.1",
+		"zod": "^4.6.5"
+	}
 }

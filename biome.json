@@ -34,7 +34,7 @@
 	"overrides": [
 		{
 			"includes": ["drizzle.config.ts"],
-			"linter": { "enabled": false },
+			"linter": { "enabled": false }
 		}
-	],
+	]
 }
