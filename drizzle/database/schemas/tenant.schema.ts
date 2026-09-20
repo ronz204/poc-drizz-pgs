@@ -3,7 +3,7 @@ import * as pg from "drizzle-orm/pg-core";
 import { generateId } from "@drizz/database/helpers/column.helper";
 import { core } from "@drizz/database/helpers/existing.helper";
 
-export const tenantPlan = core.enum("tenant_plan", ["pro", "free", "enterprise"]);
+export const tenantPlan = core.enum("tenant_plan", ["free", "pro", "enterprise"]);
 
 export const tenants = core.table("tenants", {
   id: pg.uuid("id").primaryKey().$defaultFn(generateId),

@@ -1,6 +1,6 @@
 CREATE TYPE "core"."incident_severity" AS ENUM('minor', 'major', 'critical');--> statement-breakpoint
 CREATE TYPE "core"."incident_status" AS ENUM('investigating', 'identified', 'monitoring', 'resolved');--> statement-breakpoint
-CREATE TYPE "core"."tenant_plan" AS ENUM('pro', 'free', 'enterprise');--> statement-breakpoint
+CREATE TYPE "core"."tenant_plan" AS ENUM('free', 'pro', 'enterprise');--> statement-breakpoint
 CREATE TABLE "core"."incident_services" (
 	"tenant_id" uuid NOT NULL,
 	"incident_id" uuid,

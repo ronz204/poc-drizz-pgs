@@ -1,10 +1,10 @@
 {
-  "id": "60aa9d50-2b5a-406b-ba48-42b79c448edd",
-  "prevIds": [
-    "33aff73c-c709-4c35-85a5-72fc4a686b2d"
-  ],
   "version": "8",
   "dialect": "postgres",
+  "id": "2cc14255-63e6-4bd6-ac74-7b716175b83e",
+  "prevIds": [
+    "00000000-0000-0000-0000-000000000000"
+  ],
   "ddl": [
     {
       "values": [
@@ -29,8 +29,8 @@
     },
     {
       "values": [
-        "pro",
         "free",
+        "pro",
         "enterprise"
       ],
       "name": "tenant_plan",
